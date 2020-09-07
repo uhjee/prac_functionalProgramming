@@ -40,6 +40,7 @@
             }
         }
 
+        // iterable 중에 원하는 길이 만큼만 가져오는
         // javascipt에서는 순회 가능한 값들을 (array, list)라 부르지 않고, iterable이라 칭함
         function take(length, iter) {
             let res = [];
@@ -62,14 +63,17 @@
             return acc;
         }
 
+        // 축약에 대한 구현을 담당하는 함수
         const add = (a, b) => a + b;
 
-        const f = (list, length) => {
-            return reduce(
-                add,
-                0,
-                take(length, map(a => a * a, filter(a => a % 2, list))))
-        }
+        // functional programming 은 오른쪽부터 읽어가면 편하다
+        const f = (list, length) =>
+            reduce(add, 0,
+                take(length,
+                    map(a => a * a,
+                        filter(a => a % 2, list))));
+
+
         console.log(f([1, 2, 3, 4, 5], 1));
         console.log(f([1, 2, 3, 4, 5], 2));
         console.log(f([1, 2, 3, 4, 5], 3));
