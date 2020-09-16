@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+
+<body>
+    <script>
+        var users = [{
+                id: 1,
+                name: 'ID',
+                age: 36
+            },
+            {
+                id: 2,
+                name: 'BJ',
+                age: 32
+            },
+            {
+                id: 3,
+                name: 'JM',
+                age: 32
+            },
+            {
+                id: 4,
+                name: 'PJ',
+                age: 27
+            },
+            {
+                id: 5,
+                name: 'HA',
+                age: 25
+            },
+            {
+                id: 6,
+                name: 'JE',
+                age: 26
+            },
+            {
+                id: 7,
+                name: 'JI',
+                age: 31
+            },
+            {
+                id: 8,
+                name: 'MP',
+                age: 23
+            }
+        ];
+
+        // 1. 명령형 코드   ------------------------------------------------------------------
+        // 1-1. 30세 이상인 users 거르기
+        let temp_users = [];
+        for (let i = 0; i < users.length; i++) {
+            if (users[i].age >= 30) {
+                temp_users.push(users[i]);
+            }
+        }
+        console.log(temp_users);
+
+        //1-2. 30세 이상인 users의 names 수집
+        let temp_names = [];
+        for (let i = 0; i < users.length; i++) {
+            if (users[i].age >= 30) {
+                temp_names.push(users[i].name);
+            }
+        }
+        console.log(temp_names);
+
+        // 1-3. 30세 미만인 users 거르기
+        let temp_users_30 = [];
+        for (let i = 0; i < users.length; i++) {
+            if (users[i].age < 30) {
+                temp_users_30.push(users[i]);
+            }
+        }
+        console.log(temp_users_30);
+
+        // 1-4. 30세 미만인 users의 ages 수집
+        let temp_ages = [];
+        for (let i = 0; i < users.length; i++) {
+            if (users[i].age < 30) {
+                temp_ages.push(users[i].age)
+            }
+        }
+        console.log(temp_ages);
+
+        // 2. 함수형 코드   ------------------------------------------------------------------
+        console.log('-----------------------------functional programming-----------------------------');
+        // 2-1. _filter 리팩토링
+        // function _filter(list, predicate) {
+        //     let new_list = [];
+        //     for (let i = 0; i < list.length; i++) {
+        //         // 함수형 프로그래밍에서는 추상화의 단위가 함수이다.
+        //         // 응용형 함수: 함수가 인자로 함수를 받아서, 원하는 시점에 인자로 받은 함수를 호출 ex)filter
+        //         // 고차 함수: 함수를 인자로 받거나, 함수 자체를 반환하거나 하는 함수
+        //         if (predicate(list[i])) {
+        //             new_list.push(list[i]);
+        //         }
+        //     }
+        //     return new_list;
+        // }
+        // 두 번째 인자 자체가 함수, 선언된 predicate 라는 이름으로 인자를 받는다.
+        console.log(_filter(users, function (user) {
+            return user.age >= 30
+        }));
+        console.log(_filter(users, function (user) {
+            return user.age < 30
+        }));
+
+        // 홀수 출력
+        console.log(_filter([1, 2, 3, 4], function (num) {
+            return num % 2
+        }));
+        // 짝수 출력
+        console.log(_filter([1, 2, 3, 4], function (num) {
+            return num % 2 === 0
+        }));
+
+        // // 2-2. _map 리팩토링
+        // function _map(list, mapper) {
+        //     let new_list = [];
+        //     for (let i = 0; i < list.length; i++) {
+        //         // 무엇을 push할 지, 인자로 받는 함수에게 위임
+        //         new_list.push(mapper(list[i]));
+        //     }
+        //     return new_list;
+        // }
+
+        // 2-1. _filter
+
+        function _filter(list, predicate) {
+            let new_list = [];
+
+            _each(list, function (value) {
+                if (predicate(value)) {
+                    new_list.push(value);
+                }
+            })
+            return new_list;
+        }
+
+        // 2-2. _map
+        function _map(list, mapper) {
+            let new_list = [];
+
+            // cllaback는 _each 함수 내부의 iterator로 받는다
+            _each(list, function (value) {
+                new_list.push(mapper(value));
+            });
+
+            return new_list;
+        }
+
+        // 2-3. _each 
+        function _each(list, iterator) {
+            for (let i = 0; i < list.length; i++) {
+                iterator(list[i]);
+            }
+            return list;
+        }
+
+
+        let over_30 = _filter(users, function (user) {
+            return user.age >= 30;
+        });
+        console.log(over_30);
+
+        let names = _map(over_30, function (user) {
+            return user.name
+        });
+        console.log(names);
+
+        let ages = _map(_filter(users, (user) => user.age < 30), (user) => user.age);
+        console.log(ages);
+    </script>
+</body>
+
+</html>
